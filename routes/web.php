@@ -23,6 +23,9 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
+// Category/Listing Page
+Route::get('/products/{url}','ProductsController@products');
+
 // Route::group(['middleware' => ['auth']], function() {
     Route::get('/admin/dashboard', 'AdminController@dashboard');
     Route::get('/admin/settings','AdminController@settings');
@@ -46,6 +49,9 @@ Route::get('/admin/delete-product-image/{id}', 'ProductsController@deleteProduct
 // Products Attribute Routes
 Route::match(['get', 'post'], 'admin/add-attributes/{id}', 'ProductsController@addAttributes');
 Route::get('/admin/delete-attribute/{id}','ProductsController@deleteAttribute');
+
+
+
 
 
 

@@ -195,4 +195,8 @@ class ProductsController extends Controller
         ProductsAttribute::where(['id'=>$id])->delete();
         return redirect()->back()->with('flash_message_success', 'Attribute Has Been Deleted Successfully!');
     }
+
+    public function products($url = null) {
+        echo $url; die;
+    }
 }
