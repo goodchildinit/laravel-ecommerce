@@ -197,6 +197,13 @@ class ProductsController extends Controller
     }
 
     public function products($url = null) {
-        echo $url; die;
+
+        // Get all Categories and Sub Categories
+        $categories = Category::with('categories')->where(['parent_id'=>0])->get();
+
+        $categoryDetails = Category:: where(['url' => $url])->first();
+        // echo $categoryDetails->id; die;
+        $productsAll = Product::where(['category_id' => $categoryDetails->id])->get();
+        return view('products.listing')->with(compact('categories','categoryDetails', 'productsAll'));
     }
 }
