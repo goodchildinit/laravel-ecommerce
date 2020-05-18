@@ -198,12 +198,37 @@ class ProductsController extends Controller
 
     public function products($url = null) {
 
+        // Show 404 page if Category URL does not exist
+        $countCategory = Category::where(['url'=>$url])->count();
+        // echo $countCategory; die;
+        if($countCategory==0) {
+            abort(404);
+        }
+
         // Get all Categories and Sub Categories
         $categories = Category::with('categories')->where(['parent_id'=>0])->get();
 
-        $categoryDetails = Category:: where(['url' => $url])->first();
-        // echo $categoryDetails->id; die;
-        $productsAll = Product::where(['category_id' => $categoryDetails->id])->get();
+        $categoryDetails = Category::where(['url' => $url])->first();
+
+        if($categoryDetails->parent_id==0) {
+            // if url is main category url
+            $subCategories = Category::where(['parent_id'=>$categoryDetails->id])->get();
+            foreach($subCategories  as $subcat) {
+                $cat_ids[] = $subcat->id;
+            }
+            // print_r($cat_ids); die;
+            // echo $cat_ids; die;
+            $productsAll = Product::whereIn('category_id',$cat_ids)->get();
+            // $productsAll = json_decode(json_encode($productsAll));
+            // echo "<pre>"; print_r($productsAll); die;
+        } else {
+              // if url is sub category url
+            $productsAll = Product::where(['category_id' => $categoryDetails->id])->get();
+        }
+
+
+
+
         return view('products.listing')->with(compact('categories','categoryDetails', 'productsAll'));
     }
 }
