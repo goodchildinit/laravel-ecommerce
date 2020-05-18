@@ -11,11 +11,18 @@ class CategoryController extends Controller
         if($request->isMethod('post')){
             $data = $request->all();
             // echo "<pre>"; print_r($data); die;
+
+            if (empty($data['status'])){
+                $status  = 0;
+            } else {
+                $status  = 1;
+            }
             $category = new Category;
             $category->name = $data['category_name'];
             $category->parent_id = $data['parent_id'];
             $category->description = $data['description'];
             $category->url = $data['url'];
+            $category->status = $status;
             $category->save();
 
             // Redirect after saving a category
@@ -36,8 +43,16 @@ class CategoryController extends Controller
         if($request->isMethod('post')){
             $data = $request->all();
             // echo "<pre>"; print_r($data); die;
+
+            if(empty($data['status'])){
+                $status='0';
+            }else{
+                $status='1';
+            }
+
             // This code below will update Category
-            Category::where(['id'=>$id])->update(['name'=>$data['category_name'],'description'=>$data['description'],'url'=>$data['url']]);
+            Category::where(['id'=>$id])->update(['name'=>$data['category_name'],'description'=>$data['description'],
+            'url'=>$data['url'], 'status'=>$status]);
             return redirect('/admin/view-categories')->with('flash_message_success', 'Category Updated successfully');
         }
         $categoryDetails = Category::where(['id'=>$id])->first();
