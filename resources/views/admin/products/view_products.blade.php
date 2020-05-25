@@ -29,7 +29,6 @@
             <div class="widget-title"> <span class="icon"><i class="icon-th"></i></span>
               <h5>Products</h5>
             </div>
-
           <div class="widget-content nopadding">
             <table class="table table-bordered data-table">
               <thead>
@@ -63,11 +62,11 @@
                         @endif
                     </td>
                 <td class="center">
-                    <a href="#myModal{{ $product->id }}" data-toggle="modal"   class="btn btn-success btn-mini">View</a>
-                    <a href="{{ url('/admin/edit-product/'.$product->id) }}"   class="btn btn-primary btn-mini">Edit</a>
-                    <a href="{{ url('/admin/add-attributes/'.$product->id) }}" class="btn btn-success btn-mini">Add</a>
-                    {{-- <a id="delProduct" href="{{ url('/admin/delete-product/'.$product->id) }}" class="btn btn-danger btn-mini">Delete</a> --}}
-                    <a id="delProduct" rel="{{ $product->id }}" rel1="delete-product" href="javascript:" class="btn btn-danger btn-mini deleteRecord">Delete</a>
+                    <a href="#myModal{{ $product->id }}" data-toggle="modal"   class="btn btn-success btn-mini" title=" View Product">View</a>
+                    <a href="{{ url('/admin/edit-product/'.$product->id) }}"   class="btn btn-primary btn-mini" title="Edit Product">Edit</a>
+                    <a href="{{ url('/admin/add-attributes/'.$product->id) }}" class="btn btn-success btn-mini" title="Add Attributes" >Add</a>
+                    <a href="{{ url('/admin/add-images/'.$product->id) }}" class="btn btn-info btn-mini" title="Add Images" >Add</a>
+                    <a id="delProduct" rel="{{ $product->id }}" rel1="delete-product" href="javascript:" class="btn btn-danger btn-mini deleteRecord" title="Delete Product">Delete</a>
 
                     <!---------------- I Chigozie added this Modal -------------------->
                     <div id="myModal{{ $product->id }}" class="modal hide">

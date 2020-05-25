@@ -240,6 +240,23 @@ class ProductsController extends Controller
         return view('admin.products.add_attributes')->with(compact('productDetails'));
     }
 
+    public function addImages(Request $request, $id=null) {
+        // $productDetails = Product::where(['id'=>$id])->first();
+        $productDetails = Product::with('attributes')->where(['id'=>$id])->first();
+        // $productDetails =json_decode(json_encode($productDetails));
+        // echo "<pre>"; print_r($productDetails); die;
+
+        if($request->isMethod('post')) {
+            $data = $request->all();
+            // echo "<pre>"; print_r($data); die;
+
+           // add Images
+
+        }
+        return view('admin.products.add_images')->with(compact('productDetails'));
+    }
+
+
     public function deleteAttribute($id = null) {
         ProductsAttribute::where(['id'=>$id])->delete();
         return redirect()->back()->with('flash_message_success', 'Attribute Has Been Deleted Successfully!');
