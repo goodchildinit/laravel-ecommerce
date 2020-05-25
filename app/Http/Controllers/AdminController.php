@@ -25,13 +25,7 @@ class AdminController extends Controller
     	return view('admin.admin_login');
     }
 
-    public function dashboard() {
-        //  if(Session::has('adminSession')){
-        //     // Perform all actions
-        //  }else{
-        //     //return redirect()->action('AdminController@login')->with('flash_message_error', 'Please Login');
-        //     return redirect('/admin')->with('flash_message_error','Please Login');
-        // }
+    public function dashboard() { 
         return view('admin.dashboard');
 
     }

@@ -23,9 +23,6 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-// Category/Listing Page
-Route::get('/products/{url}','ProductsController@products');
-
 // Route::group(['middleware' => ['auth']], function() {
     Route::get('/admin/dashboard', 'AdminController@dashboard');
     Route::get('/admin/settings','AdminController@settings');
@@ -43,6 +40,7 @@ Route::match(['get','post'],'/admin/add-product','ProductsController@addProduct'
 Route::match(['get','post'], '/admin/edit-product/{id}', 'ProductsController@editProduct');
 Route::get('/admin/view-products','ProductsController@viewProducts');
 Route::get('/admin/delete-product/{id}','ProductsController@deleteProduct');
+
 // Route to delete  product image
 Route::get('/admin/delete-product-image/{id}', 'ProductsController@deleteProductImage');
 
@@ -50,10 +48,14 @@ Route::get('/admin/delete-product-image/{id}', 'ProductsController@deleteProduct
 Route::match(['get', 'post'], 'admin/add-attributes/{id}', 'ProductsController@addAttributes');
 Route::get('/admin/delete-attribute/{id}','ProductsController@deleteAttribute');
 
+// Category/Listing Page
+Route::get('/products/{url}','ProductsController@products');
 
+// Product Detail Page
+Route::get('product/{id}','ProductsController@product');
 
-
-
+// Get Product Attribute
+Route::get('/get-product-price', 'ProductsController@getProductPrice');
 
 //  });
 

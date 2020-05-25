@@ -4,8 +4,8 @@
 
 	var RGBChange = function() {
 	  $('#RGB').css('background', 'rgb('+r.getValue()+','+g.getValue()+','+b.getValue()+')')
-	};	
-		
+	};
+
 /*scroll to top*/
 
 $(document).ready(function(){
@@ -28,3 +28,30 @@ $(document).ready(function(){
 		});
 	});
 });
+
+
+$(document).ready(function(){
+    $("#selSize").change(function(){
+        var idSize = $(this).val();
+        if(idSIze == "") {
+            return false;
+        }
+        $.ajax({
+            type: 'get',
+            url: '/get-product-price',
+            data:{idSize:idSize},
+            success:function(resp) {
+                // alert(resp);
+                $("#getPrice").html("NG " +resp);
+            },error:function() {
+                alert("Error");
+            }
+        })
+    });
+});
+
+$(document).ready(function(){
+
+});
+
+

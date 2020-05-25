@@ -29,6 +29,12 @@ class ProductsController extends Controller
             } else {
                 $product->description    = '';
             }
+            if(!empty($data['care'])) {
+                $product->care    = $data['care'];
+            } else {
+                $product->care    = '';
+            }
+
             $product->price          = $data['price'];
 
             //  Upload Image
@@ -73,7 +79,7 @@ class ProductsController extends Controller
     }
 
     public function viewProducts() {
-        $products = Product::get();
+        $products = Product::orderby('id', 'DESC')->get();
         $products = json_decode(json_encode($products));
         // This will loop out Category Name in view_products
         foreach($products as $key => $val) {
@@ -115,11 +121,14 @@ class ProductsController extends Controller
                 $data['description'] = '';
             }
 
+            if(empty($data['care'])) {
+                $data['care'] = '';
+            }
 
             Product::where(['id'=>$id])->update(['category_id'=>$data['category_id'],
             'product_name'=>$data['product_name'], 'product_code'=>$data['product_code'],
-            'product_color'=>$data['product_color'], 'description'=>$data['description'],'price'=>$data['price'],
-            'image'=>$filename]);
+            'product_color'=>$data['product_color'], 'description'=>$data['description'],
+            'care'=>$data['care'],'price'=>$data['price'],'image'=>$filename]);
 
             return redirect()->back()->with('flash_message_success', 'Product has Updated Successfully!');
 
@@ -201,6 +210,20 @@ class ProductsController extends Controller
 
             foreach($data['sku'] as $key => $val){
                 if(!empty($val)) {
+                    // Prevent duplicate SKU Check
+                    $attrCountSKU = ProductsAttribute::where('sku', $val)->count();
+                    if($attrCountSKU>0) {
+                        return redirect('admin/add-attributes/'.$id)->with('flash_message_error', 'SKU already exist! Please add another
+                        SKU');
+                    }
+
+                    // Prevent duplicate Size Check
+                    $attrCountSizes = ProductsAttribute::where(['product_id'=> $id, 'size'=>$data['size'][$key]])->count();
+                    if( $attrCountSizes>0) {
+                        return redirect('admin/add-attributes/'.$id)->with('flash_message_error','"'.$data['size'][$key]. '" Sizes already exist for this product! Please add another
+                        Sizes');
+                    }
+
                     $attribute = new ProductsAttribute;
                     $attribute->product_id = $id;
                     $attribute->sku     = $val;
@@ -252,5 +275,27 @@ class ProductsController extends Controller
             $productsAll = Product::where(['category_id' => $categoryDetails->id])->get();
         }
         return view('products.listing')->with(compact('categories','categoryDetails', 'productsAll'));
+    }
+
+    public function product($id = null) {
+
+        // Get Product Details
+        $productDetails = Product::with('attributes')->where('id', $id)->first();
+        // $productDetails = Json_decode(json_encode($productDetails));
+        // echo "<pre>"; print_r($productDetails); die;
+
+        // Get all Categories and Sub Categories
+        $categories = Category::with('categories')->where(['parent_id'=>0])->get();
+
+        return view('products.detail')->with(compact('productDetails', 'categories'));
+    }
+
+    public function getProductPrice(Request $request) {
+        $data = $request->all();
+        // echo "<pre>"; print_r($data); die;
+        $proArr = explode("-",$data['idSize']);
+        // echo $proArr[0]; echo $proArr[1]; die;
+        $proAttr = ProductsAttribute::where(['product_id' => $proArr[0], 'size'=> $proArr[1]])->first();
+        echo $proAttr->price;
     }
 }
