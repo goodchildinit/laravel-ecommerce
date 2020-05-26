@@ -6,6 +6,7 @@ use Auth;
 use Image;
 use App\Product;
 use App\Category;
+use App\ProductsImage;
 use App\ProductsAttribute;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
@@ -193,6 +194,37 @@ class ProductsController extends Controller
         return redirect()->back()->with('flash_message_success', 'Product Image Has Been Deleted Successfully!');
     }
 
+    public function deleteAltImage($id = null){
+
+        // Get Product Image Name
+        $productImage = ProductsImage::where(['id'=>$id])->first();
+        // echo $productImage->image; die;
+
+        // Get Product Image Path
+        $large_image_path = 'images/backend_images/products/large/';
+        $medium_image_path = 'images/backend_images/products/medium/';
+        $small_image_path = 'images/backend_images/products/small/';
+
+        // Delete Large Image if exists in Folder
+        if(file_exists($large_image_path.$productImage->image)) {
+            unlink($large_image_path.$productImage->image);
+        }
+
+         // Delete Medium Image if  exists in Folder
+         if(file_exists($medium_image_path.$productImage->image)) {
+            unlink($medium_image_path.$productImage->image);
+        }
+
+         // Delete Small Image if  exists in Folder
+         if(file_exists($small_image_path.$productImage->image)) {
+            unlink($small_image_path.$productImage->image);
+        }
+
+        // Delete Image from Products table
+        ProductsImage::where(['id'=>$id])->delete();
+        return redirect()->back()->with('flash_message_success', 'Product Alternate Image(s) Has Been Deleted Successfully!');
+    }
+
     public function deleteProduct($id = null) {
         Product::where(['id'=>$id])->delete();
         return redirect()->back()->with('flash_message_success', 'Product Has Been Deleted Successfully!');
@@ -241,19 +273,54 @@ class ProductsController extends Controller
     }
 
     public function addImages(Request $request, $id=null) {
-        // $productDetails = Product::where(['id'=>$id])->first();
-        $productDetails = Product::with('attributes')->where(['id'=>$id])->first();
-        // $productDetails =json_decode(json_encode($productDetails));
-        // echo "<pre>"; print_r($productDetails); die;
 
         if($request->isMethod('post')) {
             $data = $request->all();
             // echo "<pre>"; print_r($data); die;
+            if($request->hasFile('image')) {
+                $files = $request->file('image');
+                foreach($files as $file) {
+                    //  echo "<pre>"; print_r($files); die;
 
-           // add Images
+                    // Upload Images after resize
+                    $image             = new ProductsImage;
+                    $extension         = $file->getClientOriginalExtension();
+                    $fileName          = rand(111,99999). '.'.$extension;
+                    $small_image_path  = 'images/backend_images/products/small/'.$fileName;
+                    $medium_image_path = 'images/backend_images/products/medium/'.$fileName;
+                    $large_image_path  = 'images/backend_images/products/large/'.$fileName;
+                    Image::make($file)->save( $large_image_path);
+                    Image::make($file)->resize(600,600)->save( $medium_image_path);
+                    Image::make($file)->resize(300,300)->save( $small_image_path);
+                    $image->image      = $fileName;
+                    $image->product_id = $data['product_id'];
+                    $image->save();
+                }
+            }
 
+            return redirect('admin/add-images/'.$id)->with('flash_message_success', 'Product Images has been added successfully');
         }
-        return view('admin.products.add_images')->with(compact('productDetails'));
+
+          // $productDetails = Product::where(['id'=>$id])->first();
+          $productDetails = Product::with('attributes')->where(['id'=>$id])->first();
+          // echo "<pre>"; print_r($productDetails); die;
+
+        $productsImg  = ProductsImage::where(['product_id'=> $id])->orderBy('id', 'DESC')->get();
+        $productsImg  = json_decode(json_encode($productsImg));
+        // echo "<pre>"; print_r($productsImg); die;
+
+        $productsImages = "";
+        foreach($productsImg as $img) {
+            $productsImages .= "<tr>
+                    <td>".$img->id."</td>
+                    <td>".$img->product_id." </td>
+                    <td><img width='150px' src='/images/backend_images/products/small/$img->image'></td>
+                    <td><a  rel= '$img->id' rel1='delete-alt-image' href='javascript:' class='btn btn-danger btn-mini deleteRecord' title='Delete Product Image'>Delete</a></td>
+                </tr>";
+        }
+
+
+        return view('admin.products.add_images')->with(compact('productDetails','productsImages'));
     }
 
 
@@ -304,7 +371,12 @@ class ProductsController extends Controller
         // Get all Categories and Sub Categories
         $categories = Category::with('categories')->where(['parent_id'=>0])->get();
 
-        return view('products.detail')->with(compact('productDetails', 'categories'));
+        // Get Product Alternate Images
+        $productAltImages = ProductsImage::where('product_id', $id)->get();
+        // $productAltImages  = json_decode(json_encode( $productAltImages));
+        // echo "<pre>"; print_r( $productAltImages); die;
+
+        return view('products.detail')->with(compact('productDetails', 'categories', 'productAltImages'));
     }
 
     public function getProductPrice(Request $request) {

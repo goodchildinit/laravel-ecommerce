@@ -5,7 +5,7 @@
 <div id="content">
     <div id="content-header">
       <div id="breadcrumb"> <a href="index.html" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a> <a href="#">Products Images </a> <a href="#" class="current">Add Product Images</a> </div>
-      <h1>Products Images</h1>
+      <h1>Products Alternate Images</h1>
       @if(Session::has('flash_message_error'))
       <div class="alert alert-error alert-block">
           <button type="button" class="close" data-dismiss="alert">×</button>
@@ -28,8 +28,8 @@
             </div>
             <div class="widget-content nopadding">
                 <form enctype="multipart/form-data" class="form-horizontal" method="post"
-                action="{{ url('admin/add-attributes/'.$productDetails->id) }}"
-                name="add_attribute" id="add_attribute">{{ csrf_field() }}
+                action="{{ url('admin/add-images/'.$productDetails->id) }}"
+                name="add_image" id="add_image">{{ csrf_field() }}
                 <input type="hidden" name="product_id" value="{{ $productDetails->id }}">
                     <div class="control-group">
                         <label class="control-label">Product Name</label>
@@ -43,9 +43,9 @@
                         </label>
                   </div>
                   <div class="control-group">
-                    <label class="control-label">Image</label>
+                    <label class="control-label">Product Alt Image(s)</label>
                     <div class="controls">
-                      <input type="file" name="image" id="image">
+                        <input name="image[]" id="image" type="file" multiple="multiple">
                     </div>
                   </div>
                 <div class="form-actions">
@@ -76,8 +76,7 @@
                   </tr>
                 </thead>
                 <tbody>
-
-                    
+                    <?php echo $productsImages; ?>
                 </tbody>
               </table>
             </div>

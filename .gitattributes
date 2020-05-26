@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # * text=auto
 # *.css linguist-vendored
 # *.scss linguist-vendored
@@ -5,3 +6,8 @@
 # CHANGELOG.md export-ignore
 
  *.* linguist-language=Laravel
+=======
+ *.* linguist-language=Laravel
+
+
+>>>>>>> c47dfcda8bf62f5a5df3c083d76ed6eee0a7f315
