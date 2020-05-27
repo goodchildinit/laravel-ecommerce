@@ -33,7 +33,8 @@ $(document).ready(function(){
 $(document).ready(function(){
     $("#selSize").change(function(){
         var idSize = $(this).val();
-        if(idSIze == "") {
+        // alert(idSize);
+        if(idSize == "") {
             return false;
         }
         $.ajax({

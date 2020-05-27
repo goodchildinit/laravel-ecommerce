@@ -46,6 +46,7 @@ Route::get('/admin/delete-product-image/{id}', 'ProductsController@deleteProduct
 
 // Products Attribute Routes
 Route::match(['get', 'post'], 'admin/add-attributes/{id}', 'ProductsController@addAttributes');
+Route::match(['get', 'post'], 'admin/edit-attributes/{id}', 'ProductsController@editAttributes');
 Route::match(['get', 'post'], 'admin/add-images/{id}', 'ProductsController@addImages');
 Route::get('/admin/delete-attribute/{id}','ProductsController@deleteAttribute');
 Route::get('/admin/delete-alt-image/{id}','ProductsController@deleteAltImage');
