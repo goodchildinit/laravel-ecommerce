@@ -16,7 +16,7 @@
                         <div class="item active">
                             <div class="col-sm-6">
                                 <h1><span>Glowiee</span>-Collections</h1>
-                                <h2>Free E-Commerce Template</h2>
+                                {{-- <h2>Free E-Commerce Template</h2> --}}
                                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </p>
                                 <button type="button" class="btn btn-default get">Get it now</button>
                             </div>
@@ -27,8 +27,8 @@
                         </div>
                         <div class="item">
                             <div class="col-sm-6">
-                                <h1><span>E</span>-SHOPPER</h1>
-                                <h2>100% Responsive Design</h2>
+                                <h1><span>Glowiee</span>-Collections</h1>
+                                {{-- <h2>100% Responsive Design</h2> --}}
                                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </p>
                                 <button type="button" class="btn btn-default get">Get it now</button>
                             </div>
@@ -40,8 +40,8 @@
 
                         <div class="item">
                             <div class="col-sm-6">
-                                <h1><span>E</span>-SHOPPER</h1>
-                                <h2>Free Ecommerce Template</h2>
+                                <h1><span>Glowiee</span>-Collections</h1>
+                                {{-- <h2>Free Ecommerce Template</h2> --}}
                                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. </p>
                                 <button type="button" class="btn btn-default get">Get it now</button>
                             </div>
@@ -72,7 +72,7 @@
             <div class="col-sm-3">
 
                 @include('layouts.frontLayout.front_sidebar')
-                
+
             </div>
             <div class="col-sm-9 padding-right">
                 <div class="features_items"><!--features_items-->
@@ -83,7 +83,7 @@
                             <div class="single-products">
                                     <div class="productinfo text-center">
                                         <img src="{{ asset('images/backend_images/products/small/'.$product->image) }}" alt="" />
-                                    <h2># {{ $product->price }}</h2>
+                                    <h2>NGN {{ $product->price }}</h2>
                                     <p>{{ $product->product_name }}</p>
                                         <a href="{{ url('product/' .$product->id) }}" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</a>
                                     </div>

@@ -59,6 +59,13 @@ class ProductsController extends Controller
                 }
             }
 
+            if(empty($data['status'])) {
+                $status = 0;
+            }else{
+                $status = 1;
+            }
+            $product->status = $status;
+
             $product->save();
             // return redirect()->back()->with('flash_message_success', 'Product has been added successfully!');
             return redirect('admin/view-products')->with('flash_message_success', 'Product has been added successfully!');
@@ -126,10 +133,16 @@ class ProductsController extends Controller
                 $data['care'] = '';
             }
 
+            if(empty($data['status'])) {
+                $status = 0;
+            }else{
+                $status = 1;
+            }
+
             Product::where(['id'=>$id])->update(['category_id'=>$data['category_id'],
             'product_name'=>$data['product_name'], 'product_code'=>$data['product_code'],
             'product_color'=>$data['product_color'], 'description'=>$data['description'],
-            'care'=>$data['care'],'price'=>$data['price'],'image'=>$filename]);
+            'care'=>$data['care'],'price'=>$data['price'],'image'=>$filename, 'status'=>$status]);
 
             return redirect()->back()->with('flash_message_success', 'Product has Updated Successfully!');
 
@@ -362,23 +375,39 @@ class ProductsController extends Controller
             }
             // print_r($cat_ids); die;
             // echo $cat_ids; die;
-            $productsAll = Product::whereIn('category_id',$cat_ids)->get();
+            $productsAll = Product::whereIn('category_id',$cat_ids)->where('status', 1)->get();
             // $productsAll = json_decode(json_encode($productsAll));
             // echo "<pre>"; print_r($productsAll); die;
         } else {
               // if url is sub category url
-            $productsAll = Product::where(['category_id' => $categoryDetails->id])->get();
+            $productsAll = Product::where(['category_id' => $categoryDetails->id])->where('status', 1)->get();
         }
         return view('products.listing')->with(compact('categories','categoryDetails', 'productsAll'));
     }
 
     public function product($id = null) {
 
+         // Show 404 page if Product is disabled
+         $productsCount = Product::where(['id'=>$id, 'status'=>1])->count();
+         if($productsCount == 0) {
+             abort(404);
+         }
+
         // Get Product Details
         $productDetails = Product::with('attributes')->where('id', $id)->first();
-        // $productDetails = Json_decode(json_encode($productDetails));
+        $productDetails = Json_decode(json_encode($productDetails));
         // echo "<pre>"; print_r($productDetails); die;
 
+        $relatedProducts = Product::where('id', '!=', $id)->where(['category_id'=>$productDetails->category_id])->get();
+        // $relatedProducts = Json_decode(json_encode($relatedProducts));
+        // echo "<pre>"; print_r($relatedProducts); die;
+    //     foreach($relatedProducts->chunk(3) as $chunk){
+    //         foreach($chunk as $item) {
+    //             echo $item; echo "<br>";
+    //         }
+    //         echo "<br><br><br>";
+    //    }
+    //    die;
         // Get all Categories and Sub Categories
         $categories = Category::with('categories')->where(['parent_id'=>0])->get();
 
@@ -387,7 +416,12 @@ class ProductsController extends Controller
         // $productAltImages  = json_decode(json_encode( $productAltImages));
         // echo "<pre>"; print_r( $productAltImages); die;
 
-        return view('products.detail')->with(compact('productDetails', 'categories', 'productAltImages'));
+        // To calculate product stock
+        // echo $total_stock = ProductsAttribute::where('product_id', $id)->sum('stock'); die;
+
+         $total_stock = ProductsAttribute::where('product_id', $id)->sum('stock');
+
+         return view('products.detail')->with(compact('productDetails', 'categories', 'productAltImages', 'total_stock','relatedProducts'));
     }
 
     public function getProductPrice(Request $request) {
@@ -397,5 +431,7 @@ class ProductsController extends Controller
         // echo $proArr[0]; echo $proArr[1]; die;
         $proAttr = ProductsAttribute::where(['product_id' => $proArr[0], 'size'=> $proArr[1]])->first();
         echo $proAttr->price;
+        echo "#";
+        echo $proAttr->stock;
     }
 }

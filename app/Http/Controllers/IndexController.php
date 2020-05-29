@@ -18,7 +18,7 @@ class IndexController extends Controller
         $productsAll = Product::orderBy('id', 'DESC')->get();
 
          // In Random order
-         $productsAll = Product::inRandomOrder()->get();
+         $productsAll = Product::inRandomOrder()->where('status', 1)->get();
 
          // Get all Categories and Sub Categories
          $categories = Category::with('categories')->where(['parent_id'=>0])->get();

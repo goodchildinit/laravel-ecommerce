@@ -53,7 +53,7 @@
                     <div class="controls">
                       <input type="checkbox" name="status" id="status" @if($categoryDetails->status == "1") checked @endif value="1">
                     </div>
-                  </div>
+                </div>
                 <div class="form-actions">
                   <input type="submit" value="Add Category" class="btn btn-success">
                 </div>
