@@ -9,6 +9,8 @@ use App\Category;
 use App\ProductsImage;
 use App\ProductsAttribute;
 use Illuminate\Http\Request;
+use DB;
+use Session;
 use Illuminate\Support\Facades\Input;
 
 class ProductsController extends Controller
@@ -434,4 +436,45 @@ class ProductsController extends Controller
         echo "#";
         echo $proAttr->stock;
     }
+
+    public function addtocart(Request $request){
+        $data = $request->all();
+        // echo "<pre>"; print_r($data); die;
+
+        if(empty($data['user_email'])){
+            $data['user_email'] = '';
+        }
+
+        $session_id =  Session::get('session_id');
+        if(empty($session_id)) {
+            $session_id = str_random(40); // This will generate 40 characters sessions
+            Session::put('session_id',$session_id);
+        }
+
+        // This will remove dash('-') from size (9-Large)
+        $sizeArr = explode("-", $data['size']);
+
+        DB::table('cart')->insert(['product_id'=>$data['product_id'],'product_name'=>$data['product_name'],'product_code'=>$data['product_code'],'product_color'=>$data['product_color'],'price'=>$data['price'],'size'=>$sizeArr[1],'quantity'=>$data['quantity'],'user_email'=>$data['user_email'],'session_id'=>$session_id]);
+
+        return redirect('cart')->with('flash_message_success', 'Product has been added in Cart!');
+    }
+
+    public function cart(){
+        $session_id =  Session::get('session_id');
+        $userCart = DB::table('cart')->where(['session_id'=>$session_id])->get();
+        foreach($userCart as $key => $product) {
+            echo $product->product_id;
+            $productDetails = Product::where('id',$product->product_id)->first();
+            $userCart[$key]->image = $productDetails->image;
+        }
+        // echo "<pre>"; print_r($userCart);
+        return view('products.cart')->with(compact('userCart'));
+    }
+
+    public function deleteCartProduct($id = null) {
+        // echo $id; die;
+        DB::table('cart')->where('id',$id)->delete();
+        return redirect('cart')->with('flash_message_success', 'Product has been delete from Cart!');
+    }
+
 }

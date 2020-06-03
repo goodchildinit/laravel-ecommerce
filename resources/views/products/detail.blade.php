@@ -37,6 +37,12 @@
 
                     </div>
                     <div class="col-sm-7">
+                        <form name="addtoCartForm" id="addtoCartForm" action="{{ url('add-cart') }}" method="post">{{ csrf_field() }}
+                            <input type="hidden" name="product_id" value="{{ $productDetails->id }}">
+                            <input type="hidden" name="product_name" value="{{ $productDetails->product_name }}">
+                            <input type="hidden" name="product_code" value="{{ $productDetails->product_code }}">
+                            <input type="hidden" name="product_color" value="{{ $productDetails->product_color }}">
+                            <input type="hidden" name="price" id="price" value="{{ $productDetails->price }}">
                         <div class="product-information"><!--/product-information-->
                             <img src="images/product-details/new.jpg" class="newarrival" alt="" />
                         <h2>{{ $productDetails->product_name }}</h2>
@@ -53,18 +59,19 @@
                             <span>
                                 <span id="getPrice">NGN {{ $productDetails->price }}</span>
                                 <label>Quantity:</label>
-                                <input type="text" value="1" />
+                                <input name="quantity" type="text" value="1" />
                                 @if($total_stock>0)
-                                <button type="button" class="btn btn-fefault cart"  id="cartButton">
+                                <button type="submit" class="btn btn-fefault cart" id="cartButton">
                                     <i class="fa fa-shopping-cart"></i>
                                     Add to cart
                                 </button>
-                                @endif
+                            @endif
                             </span>
                             <p><b>Availability: </b><span id="Availability"> @if($total_stock>0) In Stock @else Out Of Stock @endif</span></p>
                             <p><b>Condition:</b> New</p>
                             <a href=""><img src="images/product-details/share.png" class="share img-responsive"  alt="" /></a>
                         </div><!--/product-information-->
+                    </form>
                     </div>
                 </div><!--/product-details-->
                 <div class="category-tab shop-details-tab"><!--category-tab-->

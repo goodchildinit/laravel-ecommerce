@@ -45,6 +45,7 @@ $(document).ready(function(){
                 // alert(resp); return false; // Output = 1500#20 (Price and Stock)
                 var arr = resp.split('#'); // Split the two arrays (Price and Stock)
                 $("#getPrice").html("NGN "+arr[0]); // get array zero which is price
+                $("#price").val(arr[0]); // get array zero which is price
                 if(arr[1]==0){ // if array One which is stock is equal to 0
 					$("#cartButton").hide(); // if stock is equal to zero hide "id = cartButton"
 					$("#Availability").text("Out Of Stock");

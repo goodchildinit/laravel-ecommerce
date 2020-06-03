@@ -17,7 +17,7 @@
           <button type="button" class="close" data-dismiss="alert">×</button>
               <strong>{!! session('flash_message_success') !!}</strong>
       </div>
-  @endif
+   @endif
     </div>
     <div class="container-fluid"><hr>
       <div class="row-fluid">
@@ -79,7 +79,7 @@
           <div class="widget-content nopadding">
 
 
-          <form action="{{ url('/admin/edit-attributes/'.$productDetails->id) }}" method="post">{{ csrf_field() }} 
+          <form action="{{ url('/admin/edit-attributes/'.$productDetails->id) }}" method="post">{{ csrf_field() }}
             <table class="table table-bordered data-table">
               <thead>
                 <tr>

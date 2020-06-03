@@ -15,13 +15,32 @@
 //     return view('welcome');
 // });
 
-Route::get('/','IndexController@index');
-
 Route::match(['get', 'post'], '/admin', 'AdminController@login');
 
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+// Index Page
+Route::get('/','IndexController@index');
+
+// Category/Listing Page
+Route::get('/products/{url}','ProductsController@products');
+
+// Product Detail Page
+Route::get('product/{id}','ProductsController@product');
+
+// Get Product Attribute Price
+Route::get('/get-product-price', 'ProductsController@getProductPrice');
+
+// Add to Cart Route
+Route::match(['get', 'post'], '/add-cart', 'ProductsController@addtocart');
+
+// Cart Page
+Route::match(['get', 'post'], '/cart','ProductsController@cart');
+
+// Delete Product from Cart Page
+Route::get('/cart/delete-product/{id}','ProductsController@deleteCartProduct');
 
 // Route::group(['middleware' => ['auth']], function() {
     Route::get('/admin/dashboard', 'AdminController@dashboard');
@@ -51,20 +70,12 @@ Route::match(['get', 'post'], 'admin/add-images/{id}', 'ProductsController@addIm
 Route::get('/admin/delete-attribute/{id}','ProductsController@deleteAttribute');
 Route::get('/admin/delete-alt-image/{id}','ProductsController@deleteAltImage');
 
-// Category/Listing Page
-Route::get('/products/{url}','ProductsController@products');
-
-// Product Detail Page
-Route::get('product/{id}','ProductsController@product');
-
-// Get Product Attribute
-Route::get('/get-product-price', 'ProductsController@getProductPrice');
 
 //  });
 
 Route::get('/logout', 'AdminController@logout');
 
-Route::get('/admin', 'AdminController@login');
+// Route::get('/admin', 'AdminController@login');
 
 
 
