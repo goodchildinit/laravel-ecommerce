@@ -4,6 +4,18 @@
 <section>
     <div class="container">
         <div class="row">
+            @if(Session::has('flash_message_success'))
+            <div class="alert alert-success alert-block">
+                <button type="button" class="close" data-dismiss="alert">×</button>
+                    <strong>{!! session('flash_message_success') !!}</strong>
+            </div>
+            @endif
+            @if(Session::has('flash_message_error'))
+            <div class="alert alert-error alert-block" style="background-color: #f2dfd0;">
+                <button type="button" class="close" data-dismiss="alert">×</button>
+                    <strong>{!! session('flash_message_error') !!}</strong>
+            </div>
+           @endif
             <div class="col-sm-3">
                  @include('layouts.frontLayout.front_sidebar')
             </div>
@@ -48,18 +60,19 @@
                         <h2>{{ $productDetails->product_name }}</h2>
                             <p>Code: {{  $productDetails->product_code }}</p>
                             <p>
-                                <select id="selSize" name="size" style="width:150px;">
+                                <select id="selSize" name="size" style="width:150px;" required>
                                     <option value="">Select Size</option>
                                     @foreach($productDetails->attributes as $sizes)
                                     <option value="{{ $productDetails->id }}-{{ $sizes->size }}">{{ $sizes->size }}</option>
                                     @endforeach
                                 </select>
+
                             </p>
                             <img src="images/product-details/rating.png" alt="" />
                             <span>
                                 <span id="getPrice">NGN {{ $productDetails->price }}</span>
                                 <label>Quantity:</label>
-                                <input name="quantity" type="text" value="1" />
+                                <input name="quantity" type="text" value="1"  style="width:30px;" />
                                 @if($total_stock>0)
                                 <button type="submit" class="btn btn-fefault cart" id="cartButton">
                                     <i class="fa fa-shopping-cart"></i>

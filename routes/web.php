@@ -42,6 +42,10 @@ Route::match(['get', 'post'], '/cart','ProductsController@cart');
 // Delete Product from Cart Page
 Route::get('/cart/delete-product/{id}','ProductsController@deleteCartProduct');
 
+// Update Product Quality in Cart
+Route::get('/cart/update-quantity/{id}/{quantity}','ProductsController@updateCartQuantity');
+
+
 // Route::group(['middleware' => ['auth']], function() {
     Route::get('/admin/dashboard', 'AdminController@dashboard');
     Route::get('/admin/settings','AdminController@settings');

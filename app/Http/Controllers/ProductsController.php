@@ -454,7 +454,27 @@ class ProductsController extends Controller
         // This will remove dash('-') from size (9-Large)
         $sizeArr = explode("-", $data['size']);
 
-        DB::table('cart')->insert(['product_id'=>$data['product_id'],'product_name'=>$data['product_name'],'product_code'=>$data['product_code'],'product_color'=>$data['product_color'],'price'=>$data['price'],'size'=>$sizeArr[1],'quantity'=>$data['quantity'],'user_email'=>$data['user_email'],'session_id'=>$session_id]);
+        //Preventing Duplicate Items
+        $countProducts =  DB::table('cart')->where(['product_id'=>$data['product_id'],
+        'product_color'=>$data['product_color'],
+        'size'=>$sizeArr[1],
+        'session_id'=>$session_id])->count();
+
+        // echo $countProducts; die;
+
+        if($countProducts>0) {
+            return redirect()->back()->with('flash_message_error', 'Product already exists in Cart!');
+        } else {
+            DB::table('cart')->insert(['product_id'=>$data['product_id'],
+            'product_name'=>$data['product_name'],
+            'product_code'=>$data['product_code'],
+            'product_color'=>$data['product_color'],
+            'price'=>$data['price'],
+            'size'=>$sizeArr[1],
+            'quantity'=>$data['quantity'],
+            'user_email'=>$data['user_email'],
+            'session_id'=>$session_id]);
+        }
 
         return redirect('cart')->with('flash_message_success', 'Product has been added in Cart!');
     }
@@ -463,7 +483,7 @@ class ProductsController extends Controller
         $session_id =  Session::get('session_id');
         $userCart = DB::table('cart')->where(['session_id'=>$session_id])->get();
         foreach($userCart as $key => $product) {
-            echo $product->product_id;
+            // echo $product->product_id;
             $productDetails = Product::where('id',$product->product_id)->first();
             $userCart[$key]->image = $productDetails->image;
         }
@@ -475,6 +495,11 @@ class ProductsController extends Controller
         // echo $id; die;
         DB::table('cart')->where('id',$id)->delete();
         return redirect('cart')->with('flash_message_success', 'Product has been delete from Cart!');
+    }
+
+    public function updateCartQuantity($id=null,$quantity=null) {
+        DB::table('cart')->where('id',$id)->increment('quantity',$quantity);
+        return redirect('cart')->with('flash_message_success', 'Product Quantity has been updated Successfully!');
     }
 
 }
