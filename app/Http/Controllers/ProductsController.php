@@ -465,9 +465,12 @@ class ProductsController extends Controller
         if($countProducts>0) {
             return redirect()->back()->with('flash_message_error', 'Product already exists in Cart!');
         } else {
+
+            $getSKU = productsAttribute::select('sku')->where(['product_id'=>$data['product_id'], 'size'=>$sizeArr[1]])->first();
+
             DB::table('cart')->insert(['product_id'=>$data['product_id'],
             'product_name'=>$data['product_name'],
-            'product_code'=>$data['product_code'],
+            'product_code'=>$getSKU->sku,
             'product_color'=>$data['product_color'],
             'price'=>$data['price'],
             'size'=>$sizeArr[1],
@@ -498,8 +501,17 @@ class ProductsController extends Controller
     }
 
     public function updateCartQuantity($id=null,$quantity=null) {
-        DB::table('cart')->where('id',$id)->increment('quantity',$quantity);
-        return redirect('cart')->with('flash_message_success', 'Product Quantity has been updated Successfully!');
+        $getCartDetails = DB::table('cart')->where('id', $id)->first();
+        $getAttributeStock = ProductsAttribute::where('sku',$getCartDetails->product_code)->first();
+        echo $getAttributeStock->stock; echo "--";
+        echo $updated_quantity = $getCartDetails->quantity+$quantity;
+        // die;
+        if($getAttributeStock->stock >= $updated_quantity) {
+            DB::table('cart')->where('id',$id)->increment('quantity',$quantity);
+            return redirect('cart')->with('flash_message_success', 'Product Quantity has been updated Successfully!');
+        } else {
+            return redirect('cart')->with('flash_message_error', 'Required Product Quantity is not available!');
+        }
     }
 
 }

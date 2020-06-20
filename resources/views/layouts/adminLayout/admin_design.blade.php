@@ -42,31 +42,15 @@
 <script src="{{ asset('js/backend_js/sweetalert.min.js') }}"></script>
 <script src="{{ asset('js/backend_js/wysihtml5-0.3.0.js') }}"></script>
 <script src="{{ asset('js/backend_js/bootstrap-wysihtml5.js') }}"></script>
-
-
-<script type="text/javascript">
-  // This function is called from the pop-up menus to transfer to
-  // a different page. Ignore if the value returned is a null string:
-  function goPage (newURL) {
-
-      // if url is empty, skip the menu dividers and reset the menu selection to default
-      if (newURL != "") {
-
-          // if url is "-", it is this page -- reset the menu:
-          if (newURL == "-" ) {
-              resetMenu();
-          }
-          // else, send page to designated URL
-          else {
-            document.location.href = newURL;
-          }
-      }
-  }
-
-// resets the menu selection upon entry to this page:
-function resetMenu() {
-   document.gomenu.selector.selectedIndex = 2;
-}
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script>
+    $(function(){
+        $("#expiry_date").datepicker({
+            minDate: 0,
+            dateFormat: 'yy-mm-dd'
+        });
+    });
 </script>
+
 </body>
 </html>

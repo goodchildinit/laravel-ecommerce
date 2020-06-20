@@ -70,7 +70,7 @@
                             </p>
                             <img src="images/product-details/rating.png" alt="" />
                             <span>
-                                <span id="getPrice">NGN {{ $productDetails->price }}</span>
+                                <span id="getPrice">₦ {{ $productDetails->price }}</span>
                                 <label>Quantity:</label>
                                 <input name="quantity" type="text" value="1"  style="width:30px;" />
                                 @if($total_stock>0)
@@ -130,7 +130,7 @@
                                         <div class="single-products">
                                             <div class="productinfo text-center">
                                                 <img style="width:150px;" src="{{ asset('images/backend_images/products/small/'.$item->image) }}" alt="" />
-                                                <h2>NGN {{ $item-> price}}</h2>
+                                                <h2>₦ {{ $item-> price}}</h2>
                                                 <p>{{ $item->product_name }}</p>
                                             <a href="{{ url('product/'.$item->id) }}"><button type="button" class="btn btn-default add-to-cart"><i class="fa fa-shopping-cart"></i>Add to cart</button></a>
                                             </div>

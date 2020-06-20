@@ -46,6 +46,7 @@ Route::get('/cart/delete-product/{id}','ProductsController@deleteCartProduct');
 Route::get('/cart/update-quantity/{id}/{quantity}','ProductsController@updateCartQuantity');
 
 
+
 // Route::group(['middleware' => ['auth']], function() {
     Route::get('/admin/dashboard', 'AdminController@dashboard');
     Route::get('/admin/settings','AdminController@settings');
@@ -74,6 +75,11 @@ Route::match(['get', 'post'], 'admin/add-images/{id}', 'ProductsController@addIm
 Route::get('/admin/delete-attribute/{id}','ProductsController@deleteAttribute');
 Route::get('/admin/delete-alt-image/{id}','ProductsController@deleteAltImage');
 
+// Add Coupon Routes
+Route::match(['get','post'],'/admin/add-coupon','CouponsController@addCoupon');
+
+// View Coupon Routes
+Route::get('/admin/view-coupons','CouponsController@viewCoupons');
 
 //  });
 

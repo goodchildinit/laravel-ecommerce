@@ -17,7 +17,7 @@
             </div>
             @endif
             @if(Session::has('flash_message_error'))
-            <div class="alert alert-error alert-block">
+            <div class="alert alert-danger alert-block">
                 <button type="button" class="close" data-dismiss="alert">×</button>
                     <strong>{!! session('flash_message_error') !!}</strong>
             </div>
@@ -34,6 +34,7 @@
                     </tr>
                 </thead>
                 <tbody>
+                    <?php $total_amount = 0; ?>
                     @foreach($userCart as $cart)
                     <tr>
                         <td class="cart_product">
@@ -44,7 +45,7 @@
                         <p>{{ $cart->product_code }} | {{ $cart->size }}</p>
                         </td>
                         <td class="cart_price">
-                        <p>NGN {{ $cart->price }}</p>
+                        <p>₦ {{ $cart->price }}</p>
                         </td>
                         <td class="cart_quantity">
                             <div class="cart_quantity_button">
@@ -56,12 +57,13 @@
                             </div>
                         </td>
                         <td class="cart_total">
-                            <p class="cart_total_price">NGN {{ $cart->price*$cart->quantity }}</p>
+                            <p class="cart_total_price">₦ {{ $cart->price*$cart->quantity }}</p>
                         </td>
                         <td class="cart_delete">
                         <a class="cart_quantity_delete" href="{{ url('/cart/delete-product/'.$cart->id) }}"><i class="fa fa-times"></i></a>
                         </td>
                     </tr>
+                    <?php $total_amount = $total_amount + ( $cart->price*$cart->quantity); ?>
                     @endforeach
                 </tbody>
             </table>
@@ -133,10 +135,7 @@
             <div class="col-sm-6">
                 <div class="total_area">
                     <ul>
-                        <li>Cart Sub Total <span>$59</span></li>
-                        <li>Eco Tax <span>$2</span></li>
-                        <li>Shipping Cost <span>Free</span></li>
-                        <li>Total <span>$61</span></li>
+                        <li>Total <span>₦ <?php echo $total_amount;  ?></span></li>
                     </ul>
                         <a class="btn btn-default update" href="">Update</a>
                         <a class="btn btn-default check_out" href="">Check Out</a>
