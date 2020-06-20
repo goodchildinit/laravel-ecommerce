@@ -78,8 +78,13 @@ Route::get('/admin/delete-alt-image/{id}','ProductsController@deleteAltImage');
 // Add Coupon Routes
 Route::match(['get','post'],'/admin/add-coupon','CouponsController@addCoupon');
 
+// Edit Coupon Routes
+Route::match(['get','post'],'/admin/edit-coupon/{id}','CouponsController@editCoupon');
+
 // View Coupon Routes
 Route::get('/admin/view-coupons','CouponsController@viewCoupons');
+
+
 
 //  });
 
